@@ -1,0 +1,498 @@
+LINGUANA API DOCUMENTATION
+==========================
+
+Base URL: http://localhost:8000/api
+Production: https://api.linguana.com/api
+
+Authentication: JWT Bearer Token
+Header: Authorization: Bearer <access_token>
+
+AUTHENTICATION ENDPOINTS
+========================
+
+1. Register User
+   POST /auth/register/
+   Body: {
+     "username": "string",
+     "email": "string",
+     "password": "string",
+     "password_confirm": "string",
+     "first_name": "string",
+     "last_name": "string",
+     "role": "contributor|validator|admin"
+   }
+   Response: {
+     "user": {...},
+     "tokens": {
+       "access": "string",
+       "refresh": "string"
+     }
+   }
+
+2. Login
+   POST /auth/login/
+   Body: {
+     "email": "string",
+     "password": "string"
+   }
+   Response: {
+     "user": {...},
+     "tokens": {...}
+   }
+
+3. Refresh Token
+   POST /auth/token/refresh/
+   Body: {
+     "refresh": "string"
+   }
+   Response: {
+     "access": "string"
+   }
+
+4. Connect Wallet
+   POST /auth/wallet/connect/
+   Headers: Authorization required
+   Body: {
+     "wallet_address": "0x...",
+     "signature": "string",
+     "message": "string"
+   }
+   Response: {
+     "message": "Wallet connected successfully",
+     "user": {...}
+   }
+
+5. Disconnect Wallet
+   POST /auth/wallet/disconnect/
+   Headers: Authorization required
+   Response: {
+     "message": "Wallet disconnected successfully",
+     "user": {...}
+   }
+
+6. Firebase Authentication
+   POST /auth/firebase/
+   Body: {
+     "firebase_token": "string"
+   }
+   Response: {
+     "user": {...},
+     "tokens": {...},
+     "created": boolean
+   }
+
+7. Magic Link Request
+   POST /auth/magic-link/request/
+   Body: {
+     "email": "string"
+   }
+   Response: {
+     "message": "Magic link sent to your email",
+     "email": "string"
+   }
+
+8. Magic Link Verify
+   POST /auth/magic-link/verify/
+   Body: {
+     "token": "string"
+   }
+   Response: {
+     "user": {...},
+     "tokens": {...}
+   }
+
+9. Get User Profile
+   GET /auth/profile/
+   Headers: Authorization required
+   Response: {
+     "id": integer,
+     "username": "string",
+     "email": "string",
+     "wallet_address": "string",
+     "balance_usdc": "decimal",
+     "total_contributions": integer,
+     "streak_days": integer,
+     "points": integer,
+     "level": integer,
+     "badges": [...]
+   }
+
+10. Update User Profile
+    PUT/PATCH /auth/profile/
+    Headers: Authorization required
+    Body: {
+      "nickname": "string",
+      "bio": "string",
+      "profile_photo": file,
+      "preferred_language": "en|sw"
+    }
+
+11. Get User Stats
+    GET /auth/stats/
+    Headers: Authorization required
+    Response: {
+      "total_clips_uploaded": integer,
+      "total_clips_validated": integer,
+      "total_earned": "decimal",
+      "current_streak": integer,
+      "points": integer,
+      "level": integer
+    }
+
+12. Get Leaderboard
+    GET /auth/leaderboard/?type=points|contributions|earnings|streak
+    Headers: Authorization required
+    Response: [
+      {
+        "rank": integer,
+        "username": "string",
+        "points": integer,
+        "total_contributions": integer
+      }
+    ]
+
+AUDIO ENDPOINTS
+===============
+
+1. List Audio Clips
+   GET /audio/clips/
+   Headers: Authorization required
+   Query Params: ?dialect=sheng&status=validated&page=1
+   Response: {
+     "count": integer,
+     "results": [...]
+   }
+
+2. Create Audio Clip
+   POST /audio/clips/
+   Headers: Authorization required
+   Content-Type: multipart/form-data
+   Body: {
+     "audio_file": file,
+     "dialect": "sheng|kiamu|kibajuni",
+     "duration_seconds": float,
+     "sample_rate": integer,
+     "channels": integer,
+     "file_size_bytes": integer,
+     "consent_given": true,
+     "consent_text": "string",
+     "consent_timestamp": "datetime",
+     "waveform_data": [array],
+     "metadata": {}
+   }
+   Response: {
+     "id": "uuid",
+     "status": "pending",
+     ...
+   }
+
+3. Get Audio Clip Detail
+   GET /audio/clips/{id}/
+   Headers: Authorization required
+   Response: {
+     "id": "uuid",
+     "uploader_info": {...},
+     "audio_url": "string",
+     "status": "string",
+     "asr_draft_transcription": "string",
+     ...
+   }
+
+4. Get My Clips
+   GET /audio/clips/my_clips/
+   Headers: Authorization required
+   Response: {
+     "count": integer,
+     "results": [...]
+   }
+
+5. Get Pronunciation Feedback
+   GET /audio/clips/{id}/feedback/
+   Headers: Authorization required
+   Response: {
+     "overall_score": float,
+     "clarity_score": float,
+     "fluency_score": float,
+     "pronunciation_issues": [...],
+     "improvement_suggestions": [...]
+   }
+
+6. Submit Clip for Annotation
+   POST /audio/clips/{id}/submit_for_annotation/
+   Headers: Authorization required
+   Response: {
+     "message": "Clip submitted for annotation",
+     "clip": {...}
+   }
+
+7. Delete Audio Clip
+   DELETE /audio/clips/{id}/
+   Headers: Authorization required
+   Note: Only pending/rejected clips can be deleted by uploader
+
+8. Dashboard Stats
+   GET /audio/dashboard/
+   Headers: Authorization required
+   Response: {
+     "total_clips": integer,
+     "pending_clips": integer,
+     "validated_clips": integer,
+     "recent_clips": [...],
+     "user_stats": {...}
+   }
+
+DATASET ENDPOINTS
+=================
+
+1. List Datasets
+   GET /audio/datasets/
+   Headers: Authorization required
+   Query Params: ?dialect=sheng&is_public=true
+
+2. Get Dataset Detail
+   GET /audio/datasets/{id}/
+
+3. Download Dataset
+   GET /audio/datasets/{id}/download/
+   Headers: Authorization required
+   Response: {
+     "download_url": "string",
+     "dataset": {...}
+   }
+
+4. Generate Dataset Manifest (Admin)
+   POST /audio/datasets/{id}/generate_manifest/
+   Headers: Authorization required (Admin only)
+
+ANNOTATION ENDPOINTS
+====================
+
+1. List Annotations
+   GET /annotations/annotations/
+   Headers: Authorization required
+   Query Params: ?clip={uuid}&validated=true
+
+2. Create Annotation
+   POST /annotations/annotations/
+   Headers: Authorization required
+   Body: {
+     "clip": "uuid",
+     "transcription": "string",
+     "quality_rating": "excellent|good|fair|poor",
+     "confidence_score": float,
+     "time_spent_seconds": integer,
+     "notes": "string"
+   }
+   Response: {
+     "id": "uuid",
+     "validated": false,
+     ...
+   }
+
+3. Get My Annotations
+   GET /annotations/annotations/my_annotations/
+   Headers: Authorization required
+
+4. Get Next Annotation Task
+   GET /annotations/tasks/next_task/?dialect=sheng
+   Headers: Authorization required
+   Response: {
+     "id": "uuid",
+     "clip_info": {...},
+     "status": "assigned"
+   }
+
+5. Complete Annotation Task
+   POST /annotations/tasks/{id}/complete/
+   Headers: Authorization required
+   Response: {
+     "message": "Task completed",
+     "task": {...}
+   }
+
+6. Skip Annotation Task
+   POST /annotations/tasks/{id}/skip/
+   Headers: Authorization required
+
+7. Get Annotation Queue Stats
+   GET /annotations/queue/stats/?dialect=sheng
+   Headers: Authorization required
+   Response: {
+     "total_pending_tasks": integer,
+     "by_dialect": {...},
+     "user_annotations_today": integer
+   }
+
+8. Get Consensus Results
+   GET /annotations/consensus/
+   Headers: Authorization required
+   Query Params: ?clip={uuid}
+
+REWARDS ENDPOINTS
+=================
+
+1. List Rewards
+   GET /rewards/rewards/
+   Headers: Authorization required
+   Query Params: ?status=completed&reward_type=contributor
+
+2. Get My Rewards
+   GET /rewards/rewards/my_rewards/
+   Headers: Authorization required
+
+3. Get Rewards Summary
+   GET /rewards/rewards/summary/
+   Headers: Authorization required
+   Response: {
+     "total_earned": "decimal",
+     "pending_rewards": "decimal",
+     "current_balance": "decimal",
+     "contributor_earnings": "decimal",
+     "validator_earnings": "decimal"
+   }
+
+4. List Transactions
+   GET /rewards/transactions/
+   Headers: Authorization required
+
+5. Get My Transactions
+   GET /rewards/transactions/my_transactions/
+   Headers: Authorization required
+
+6. Create Withdrawal Request
+   POST /rewards/withdrawals/
+   Headers: Authorization required
+   Body: {
+     "amount_usdc": "decimal",
+     "wallet_address": "0x..."
+   }
+   Response: {
+     "id": "uuid",
+     "status": "pending",
+     ...
+   }
+
+7. List Withdrawal Requests
+   GET /rewards/withdrawals/
+   Headers: Authorization required
+
+8. Approve Withdrawal (Admin)
+   POST /rewards/withdrawals/{id}/approve/
+   Headers: Authorization required (Admin only)
+
+9. Reject Withdrawal (Admin)
+   POST /rewards/withdrawals/{id}/reject/
+   Headers: Authorization required (Admin only)
+   Body: {
+     "notes": "string"
+   }
+
+10. Rewards Analytics (Admin)
+    GET /rewards/analytics/
+    Headers: Authorization required (Admin only)
+    Response: {
+      "total_rewards_issued": integer,
+      "total_distributed_usdc": "decimal",
+      "pending_rewards_usdc": "decimal"
+    }
+
+WEBSOCKET ENDPOINTS
+===================
+
+1. ASR Streaming
+   WS /ws/asr/stream/{dialect}/
+   
+   Client sends:
+   - Action: {"action": "start"}
+   - Audio chunks: binary data
+   - Stop: {"action": "stop"}
+   
+   Server sends:
+   {
+     "type": "partial_transcript",
+     "text": "string",
+     "confidence": float,
+     "is_final": boolean
+   }
+
+ERROR RESPONSES
+===============
+
+400 Bad Request:
+{
+  "error": "Error message",
+  "field_errors": {...}
+}
+
+401 Unauthorized:
+{
+  "detail": "Authentication credentials were not provided."
+}
+
+403 Forbidden:
+{
+  "detail": "You do not have permission to perform this action."
+}
+
+404 Not Found:
+{
+  "detail": "Not found."
+}
+
+500 Internal Server Error:
+{
+  "error": "Internal server error"
+}
+
+PAGINATION
+==========
+
+All list endpoints support pagination:
+- page: Page number (default: 1)
+- page_size: Items per page (default: 20, max: 100)
+
+Response format:
+{
+  "count": integer,
+  "next": "url|null",
+  "previous": "url|null",
+  "results": [...]
+}
+
+FILTERING & SEARCH
+==================
+
+Audio Clips:
+- ?dialect=sheng
+- ?status=validated
+- ?search=transcription_text
+
+Annotations:
+- ?clip={uuid}
+- ?validated=true
+- ?quality_rating=excellent
+
+Rewards:
+- ?status=completed
+- ?reward_type=contributor
+
+RATE LIMITING
+=============
+
+Default limits:
+- Anonymous: 100 requests/hour
+- Authenticated: 1000 requests/hour
+- Admin: Unlimited
+
+Headers:
+- X-RateLimit-Limit: Total allowed
+- X-RateLimit-Remaining: Remaining requests
+- X-RateLimit-Reset: Reset timestamp
+
+SWAGGER DOCUMENTATION
+=====================
+
+Interactive API documentation available at:
+- Swagger UI: http://localhost:8000/api/docs/
+- ReDoc: http://localhost:8000/api/redoc/
+- OpenAPI Schema: http://localhost:8000/api/schema/

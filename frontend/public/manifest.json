@@ -1,0 +1,32 @@
+{
+  "name": "Linguana - Learn Kenyan Dialects",
+  "short_name": "Linguana",
+  "description": "Learn and improve spoken Kenyan dialects while earning USDC rewards",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#40C4C4",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "screenshots": [
+    {
+      "src": "/screenshot1.png",
+      "sizes": "540x720",
+      "type": "image/png"
+    }
+  ]
+}
