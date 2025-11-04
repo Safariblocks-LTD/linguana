@@ -8,7 +8,10 @@ export const metadata: Metadata = {
   title: 'Linguana - Learn Kenyan Dialects',
   description: 'Crowdsourced platform for learning and preserving Kenyan dialects',
   manifest: '/manifest.json',
-  themeColor: '#40C4C4',
+}
+
+export const viewport = {
+  themeColor: '#40E0D0',
 }
 
 export default function RootLayout({

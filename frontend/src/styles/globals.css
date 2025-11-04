@@ -1,17 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Merriweather:wght@700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary: #40C4C4;
-  --primary-dark: #35b3b3;
-  --background: #000000;
-  --foreground: #ffffff;
+  --clr-primary: #40E0D0;
+  --clr-primary-600: #33c9bb;
+  --clr-accent: #FF9F42;
+  --clr-bg: #FFF9F2;
+  --clr-text: #000000;
+  --clr-muted: #6B7280;
+  --clr-success: #16A34A;
+  --clr-danger: #FF5C5C;
+  --radius-base: 12px;
+  --shadow-soft: 0 6px 18px rgba(2,6,23,0.08);
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  
+  body {
+    @apply bg-bg text-[#000000] font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white rounded-lg px-6 py-3 shadow-soft hover:bg-primary-600 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply border border-muted rounded-lg px-6 py-3 hover:bg-gray-50 transition-colors;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl p-4 shadow-soft;
+  }
+  
+  .glass {
+    @apply bg-white/80 backdrop-blur-sm;
+  }
 }
 
 @layer utilities {

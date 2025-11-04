@@ -5,29 +5,34 @@
 
 # Testing
 /coverage
+.nyc_output
 
 # Next.js
 /.next/
 /out/
-
-# Production
 /build
 
 # Misc
 .DS_Store
 *.pem
+Thumbs.db
 
 # Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
 
-# Local env files
-.env*.local
+# Local env files - ALL ENV FILES SHOULD BE IGNORED
+.env*
 .env
+.env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.development
+.env.test
+.env.production
 
 # Vercel
 .vercel
@@ -36,10 +41,97 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# PWA files
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+
+# Cache directories
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Temporary folders
+tmp/
+temp/
+
+# Audio files for development
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.ogg
+audio/
+recordings/
+
+# Firebase config (contains secrets)
+firebase.json
+.firestore/
+.firebaserc
+serviceAccountKey.json
+
+# API keys and secrets
+**/api-keys*
+**/secrets*
+**/private*
+**/config*.json
+**/credentials*
+**/*.pem
+**/*.key
+
+# Service worker (generated)
 **/public/sw.js
 **/public/workbox-*.js
 **/public/worker-*.js
 **/public/sw.js.map
 **/public/workbox-*.js.map
 **/public/worker-*.js.map
+
+# PWA icons (if not committed)
+icons/
+icon-*.png
+favicon-*.png
+
+# Local development
+.local/
+
+# Bundle analyzer
+bundle-analyzer-report.html
+
+# Sentry
+.sentryclirc
+
+# Storybook
+.storybook-out
+
+# Testing
+coverage/
+.nyc_output/
+.pytest_cache/
+
+# Lock files (keep package-lock.json)
+yarn.lock
+pnpm-lock.yaml
+
+# Backup files
+*.bak
+*.backup
+*.old
