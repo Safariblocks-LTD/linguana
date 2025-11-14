@@ -1,13 +1,36 @@
+# Environment Variables - ALL SHOULD BE IGNORED
 .env
+.env.*
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+config.env
+secrets.env
+
+# Python - ALL DEPENDENCIES AND CACHE
 *.pyc
+*.pyo
+*.pyd
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+
+# Virtual Environments - ALL SHOULD BE IGNORED
 venv/
 env/
 ENV/
+.venv/
+envs/
+.env/
+.ENV/
+venv.bak/
+env.bak/
+
+# Distribution / packaging
 build/
 develop-eggs/
 dist/
@@ -20,15 +43,126 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
 *.log
-logs/
+local_settings.py
 db.sqlite3
 db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Package manager files
+Pipfile
+poetry.lock
+poetry.toml
+pdm.lock
+pdm.toml
+pdm.pyproject
+
+# Logs
+*.log
+logs/
+debug.log
+error.log
+access.log
+django.log
+
+# Database
+db.sqlite3
+db.sqlite3-journal
+*.db
+*.sqlite
+*.sql
+dump.sql
+backup.sql
+
+# Django/FastAPI
 media/
 staticfiles/
+static_root/
+local_settings.py
+django.log
+
+# Process files
+celerybeat-schedule
+celerybeat.pid
+
+# IDE & Editor
 .DS_Store
 *.swp
 *.swo
@@ -36,6 +170,112 @@ staticfiles/
 .vscode/
 .idea/
 *.iml
-celerybeat-schedule
-celerybeat.pid
+
+# Secrets and Configuration
 firebase-credentials.json
+secrets.json
+config.json
+settings.json
+credentials.json
+api_keys.json
+aws.json
+google-credentials.json
+serviceAccountKey.json
+firebase-adminsdk-*.json
+
+# SSL Certificates
+*.pem
+*.key
+*.crt
+*.cert
+ssl/
+certs/
+
+# Audio files (development)
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.ogg
+audio/
+recordings/
+uploads/audio/
+media/audio/
+
+# Model files
+*.pkl
+*.joblib
+*.h5
+*.hdf5
+*.model
+models/
+model_data/
+ml_models/
+
+# Cache
+.cache/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Monitoring
+monitoring/
+metrics/
+analytics/
+
+# Session data
+sessions/
+session_store/
+
+# Redis
+dump.rdb
+
+# Local development
+.local/
+dev/
+development/
+
+# AWS
+.aws/
+samconfig.toml
+
+# Google Cloud
+.gcloud/
+
+# Sentry
+.sentryclirc
+
+# Production artifacts
+*.tar.gz
+*.zip
+*.war
+
+# Configuration overrides
+settings/local.py
+settings/development.py
+settings/production.py
+.env.local.*

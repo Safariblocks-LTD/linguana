@@ -9,18 +9,22 @@ def verify_firebase_token(token):
         raise ValueError("Firebase authentication is not enabled")
     
     try:
-        import firebase_admin
-        from firebase_admin import credentials, auth
+        from google.oauth2 import id_token
+        from google.auth.transport import requests
         
-        if not firebase_admin._apps:
-            if os.path.exists(settings.FIREBASE_CREDENTIALS_PATH):
-                cred = credentials.Certificate(settings.FIREBASE_CREDENTIALS_PATH)
-                firebase_admin.initialize_app(cred)
+        request = requests.Request()
+        id_info = id_token.verify_oauth2_token(
+            token, 
+            request, 
+            settings.FIREBASE_WEB_API_KEY
+        )
         
-        decoded_token = auth.verify_id_token(token)
-        return decoded_token
+        if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            raise ValueError('Wrong issuer.')
+        
+        return id_info
     except ImportError:
-        raise ValueError("Firebase Admin SDK not installed. Install with: pip install firebase-admin")
+        raise ValueError("Google Auth not installed. Install with: pip install google-auth")
     except Exception as e:
         raise ValueError(f"Invalid Firebase token: {str(e)}")
 

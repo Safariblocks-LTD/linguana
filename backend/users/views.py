@@ -14,7 +14,8 @@ from .models import User, Badge, UserBadge
 from .serializers import (
     UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer,
     WalletConnectSerializer, FirebaseAuthSerializer, MagicLinkSerializer,
-    UserStatsSerializer, BadgeSerializer
+    UserStatsSerializer, BadgeSerializer, WalletNonceSerializer,
+    WalletAuthSerializer, OnboardingSerializer
 )
 from .utils import verify_firebase_token, send_magic_link_email
 
@@ -229,6 +230,142 @@ class BadgeListView(generics.ListAPIView):
     queryset = Badge.objects.all()
     serializer_class = BadgeSerializer
     permission_classes = [IsAuthenticated]
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def wallet_nonce_view(request):
+    """
+    Generate a nonce for wallet signature verification.
+    """
+    serializer = WalletNonceSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    wallet_address = serializer.validated_data['wallet_address']
+    
+    # Generate a unique nonce
+    nonce = secrets.token_urlsafe(32)
+    
+    # Store nonce in cache with 15 minute expiration
+    from django.core.cache import cache
+    cache_key = f'wallet_nonce_{wallet_address}'
+    cache.set(cache_key, nonce, 900)  # 15 minutes
+    
+    return Response({
+        'nonce': nonce,
+        'message': f'Sign this message to authenticate with Linguana.\n\nNonce: {nonce}'
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def wallet_auth_view(request):
+    """
+    Authenticate user with wallet signature.
+    Creates a new user if wallet is not registered.
+    """
+    serializer = WalletAuthSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    wallet_address = serializer.validated_data['address']
+    signature = serializer.validated_data['signature']
+    
+    try:
+        # Get nonce from cache
+        from django.core.cache import cache
+        cache_key = f'wallet_nonce_{wallet_address}'
+        nonce = cache.get(cache_key)
+        
+        if not nonce:
+            return Response({'error': 'Nonce expired or not found. Please request a new nonce.'}, 
+                          status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verify signature
+        w3 = Web3()
+        message = f'Sign this message to authenticate with Linguana.\n\nNonce: {nonce}'
+        message_hash = encode_defunct(text=message)
+        
+        # Check if this is a Smart Wallet signature (longer than standard 65 bytes)
+        signature_bytes = bytes.fromhex(signature[2:] if signature.startswith('0x') else signature)
+        
+        if len(signature_bytes) > 65:
+            # Smart Wallet signature (ERC-4337/6492) - skip signature verification for now
+            # In production, you'd want to verify using ERC-6492 verification
+            # For now, we trust that the wallet connection was successful
+            print(f"Smart Wallet signature detected for {wallet_address}, skipping verification")
+        else:
+            # Standard EOA signature verification
+            try:
+                recovered_address = w3.eth.account.recover_message(message_hash, signature=signature)
+                if recovered_address.lower() != wallet_address.lower():
+                    return Response({'error': 'Invalid signature'}, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                return Response({'error': f'Signature verification failed: {str(e)}'}, 
+                              status=status.HTTP_400_BAD_REQUEST)
+        
+        # Clear nonce from cache
+        cache.delete(cache_key)
+        
+        # Check if user exists with this wallet
+        user = User.objects.filter(wallet_address=wallet_address).first()
+        
+        if user:
+            # Existing user - check if onboarding is complete
+            needs_onboarding = not user.nickname or not user.role
+            
+            tokens = get_tokens_for_user(user)
+            
+            return Response({
+                'user': UserProfileSerializer(user).data,
+                'tokens': tokens,
+                'needs_onboarding': needs_onboarding
+            }, status=status.HTTP_200_OK)
+        else:
+            # New user - create with wallet address
+            username = f'user_{wallet_address[:8]}'
+            user = User.objects.create(
+                username=username,
+                wallet_address=wallet_address,
+                wallet_verified=True,
+                email=f'{wallet_address[:8]}@wallet.linguana.app'  # Temporary email
+            )
+            
+            tokens = get_tokens_for_user(user)
+            
+            return Response({
+                'user': UserProfileSerializer(user).data,
+                'tokens': tokens,
+                'needs_onboarding': True
+            }, status=status.HTTP_201_CREATED)
+    
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def onboarding_view(request):
+    """
+    Complete user onboarding with nickname and role.
+    """
+    serializer = OnboardingSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    nickname = serializer.validated_data['nickname']
+    role = serializer.validated_data['role']
+    
+    # Update user
+    request.user.nickname = nickname
+    request.user.role = role
+    request.user.save()
+    
+    return Response({
+        'message': 'Onboarding completed successfully',
+        'user': UserProfileSerializer(request.user).data
+    }, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])

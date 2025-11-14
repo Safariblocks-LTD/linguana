@@ -18,7 +18,7 @@ class User(AbstractUser):
     wallet_verified = models.BooleanField(default=False)
     balance_usdc = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     firebase_uid = models.CharField(max_length=128, blank=True, null=True, unique=True)
-    profile_photo_url = models.URLField(blank=True, null=True)
+    profile_photo = models.ImageField(upload_to='profiles/', blank=True, null=True)
     nickname = models.CharField(max_length=50, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     total_contributions = models.IntegerField(default=0)

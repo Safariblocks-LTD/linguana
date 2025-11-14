@@ -83,19 +83,35 @@ export function AudioRecorder({
   };
 
   return (
-    <div className="card max-w-2xl mx-auto">
+    <div className="bg-gray-800/50 backdrop-blur-lg rounded-xl border border-gray-700 p-8 max-w-2xl mx-auto">
       <div className="space-y-6">
         {/* Header */}
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-2">Record Your Phrase</h2>
-          <p className="text-muted">Sikika — Rekodi sasa</p>
+          <h2 className="text-2xl font-bold text-white mb-2">Record Your Phrase</h2>
+          <p className="text-gray-400">Sikika — Rekodi sasa</p>
+        </div>
+
+        {/* Consent Checkbox - Moved to top */}
+        <div className="flex items-start gap-3 p-4 bg-gray-900/50 rounded-lg border-2 border-[#54e6b6]/30">
+          <input
+            type="checkbox"
+            id="consent"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            className="mt-1 w-5 h-5 accent-[#54e6b6]"
+          />
+          <label htmlFor="consent" className="text-sm text-gray-300 cursor-pointer">
+            I consent to having my voice recorded and used for language learning
+            purposes. I understand this data will be used to improve speech
+            recognition for Kenyan dialects.
+          </label>
         </div>
 
         {/* Waveform Visualization Area */}
-        <div className="bg-bg rounded-lg p-8 min-h-[200px] flex items-center justify-center">
+        <div className="bg-gray-900/50 rounded-lg p-8 min-h-[200px] flex items-center justify-center">
           {!isRecording && !isPaused && (
-            <div className="text-center text-muted">
-              <Mic className="w-16 h-16 mx-auto mb-4 opacity-50" />
+            <div className="text-center text-gray-400">
+              <Mic className="w-16 h-16 mx-auto mb-4 opacity-50 text-gray-500" />
               <p>Ready to record</p>
             </div>
           )}
@@ -104,19 +120,19 @@ export function AudioRecorder({
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-4">
                 {isRecording && (
-                  <div className="w-3 h-3 bg-danger rounded-full animate-pulse" />
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
                 )}
-                <span className="text-3xl font-mono font-bold">
+                <span className="text-3xl font-mono font-bold text-white">
                   {formatTime(duration)}
                 </span>
-                <span className="text-muted">/ {formatTime(maxDuration)}</span>
+                <span className="text-gray-400">/ {formatTime(maxDuration)}</span>
               </div>
 
               {/* Simple VU Meter */}
               <div className="w-full max-w-md mx-auto">
-                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-primary transition-all duration-100"
+                    className="h-full bg-[#54e6b6] transition-all duration-100"
                     style={{
                       width: `${Math.min((duration / maxDuration) * 100, 100)}%`,
                     }}
@@ -134,11 +150,11 @@ export function AudioRecorder({
               onClick={handleStart}
               disabled={!consent}
               size="lg"
-              className="btn-primary"
+              className="bg-[#54e6b6] hover:bg-[#54e6b6]/90 text-black font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Start recording"
             >
               <Mic className="w-5 h-5 mr-2" />
-              Start Recording
+              {consent ? 'Start Recording' : 'Accept consent to record'}
             </Button>
           )}
 
@@ -192,31 +208,15 @@ export function AudioRecorder({
         {/* Error Display */}
         {error && (
           <div
-            className="bg-danger/10 border border-danger text-danger px-4 py-3 rounded-lg"
+            className="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-lg"
             role="alert"
           >
-            {error}
+            <strong>Error:</strong> {error}
           </div>
         )}
 
-        {/* Consent Checkbox */}
-        <div className="flex items-start gap-3 p-4 bg-bg rounded-lg">
-          <input
-            type="checkbox"
-            id="consent"
-            checked={consent}
-            onChange={(e) => setConsent(e.target.checked)}
-            className="mt-1"
-          />
-          <label htmlFor="consent" className="text-sm">
-            I consent to having my voice recorded and used for language learning
-            purposes. I understand this data will be used to improve speech
-            recognition for Kenyan dialects.
-          </label>
-        </div>
-
         {/* Info */}
-        <div className="text-center text-sm text-muted">
+        <div className="text-center text-sm text-gray-500">
           <p>Maximum duration: {maxDuration} seconds</p>
           <p>Audio will be split into {chunkSize}-second chunks</p>
         </div>

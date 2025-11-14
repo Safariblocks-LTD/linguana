@@ -1,26 +1,29 @@
-<div align="center">
-  <h1>🌍 Linguana</h1>
-  <h3>Kenyan Dialect Learning & Crowdsourcing Platform</h3>
-  
-  [![License: SSPL](https://img.shields.io/badge/License-SSPL-ff69b4.svg)](https://www.mongodb.com/licensing/server-side-public-license)
-  [![Next.js](https://img.shields.io/badge/Next.js-14.0.3-000000?logo=next.js)](https://nextjs.org/)
-  [![Django](https://img.shields.io/badge/Django-4.2-092E20?logo=django)](https://www.djangoproject.com/)
-  [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-  [![Base](https://img.shields.io/badge/Base_L2-0052FF?logo=ethereum)](https://base.org/)
+# Linguana: African Dialects & Languages Learning Platform
 
-  A Progressive Web App for learning Kenyan dialects (Sheng, Kiamu, Kibajuni) with gamified crowdsourcing and USDC rewards on Base L2.
+<div align="center">
+  <img src="frontend/public/LinguanaHomePage.jpg" alt="Linguana Home Page" width="800"/>
 </div>
 
-## ✨ Features
+## Overview
 
-- **Multi-language Support**: Record and validate audio clips in various Kenyan dialects
+Linguana is a comprehensive platform for learning and preserving African dialects and languages through an engaging, gamified experience. The platform combines modern web technologies with blockchain to create a community-driven language learning ecosystem that celebrates Africa's rich linguistic diversity.
+
+[![License: SSPL](https://img.shields.io/badge/License-SSPL-ff69b4.svg)](https://www.mongodb.com/licensing/server-side-public-license)
+[![Next.js](https://img.shields.io/badge/Next.js-14.0.3-000000?logo=next.js)](https://nextjs.org/)
+[![Django](https://img.shields.io/badge/Django-4.2-092E20?logo=django)](https://www.djangoproject.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Base](https://img.shields.io/badge/Base_L2-0052FF?logo=ethereum)](https://base.org/)
+
+## Features
+
+- **Multi-language Support**: Record and validate audio clips in various African dialects and languages
 - **Gamification**: Earn badges, points, and climb leaderboards
 - **Web3 Integration**: USDC rewards distributed on Base L2
 - **Real-time ASR**: Powered by Whisper for accurate speech recognition
 - **PWA Support**: Installable and works offline
 - **Community Driven**: Crowdsourced content with consensus validation
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 linguana/
@@ -41,9 +44,15 @@ linguana/
     └── package.json     # Frontend dependencies
 ```
 
-## 🚀 Quick Start
+## Getting Started
 
 ### Prerequisites
+
+- Python 3.10+
+- Node.js 18+
+- PostgreSQL 13+
+- Redis 6+
+- FFmpeg
 - Python 3.10+
 - Node.js 18+
 - PostgreSQL 13+
@@ -123,7 +132,7 @@ brew services start redis
 sudo systemctl start redis
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 ### Backend (`.env`)
 
@@ -169,38 +178,44 @@ NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-app.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
 ```
 
-## 🎯 Key Features
+## Key Features
 
-### 🔐 Authentication
+### Dashboard Overview
+
+<div align="center">
+  <img src="frontend/public/LinguanaContributorDashboard.jpg" alt="Linguana Contributor Dashboard" width="800"/>
+</div>
+
+### Authentication
 - Multiple login methods (Email/Password, Google, Wallet Connect, Magic Link)
 - JWT-based authentication with refresh tokens
 - Role-based access control
 
-### 🎤 Audio Processing
+### Audio Processing
 - In-browser audio recording with Web Audio API
 - Real-time speech-to-text with Whisper ASR
 - Audio waveform visualization
 - Offline recording support (PWA)
 
-### 🏆 Gamification
+### Gamification
 - Achievement badges and levels
 - Daily streaks and challenges
 - Leaderboards and user rankings
 - Progress tracking and statistics
 
-### 💰 Web3 Integration
+### Web3 Integration
 - USDC rewards on Base L2
 - Smart contract integration for transparent payouts
 - Wallet connection (MetaMask, WalletConnect)
 - Transaction history and rewards dashboard
 
-### 🤝 Community Features
+### Community Features
 - Crowdsourced content creation
 - Consensus-based validation system
 - Quality rating and feedback
 - Public dataset exports for research
 
-## 🌐 API Reference
+## API Reference
 
 ### Authentication
 
@@ -245,7 +260,7 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
 |----------|-------------|
 | `ws://{host}/ws/asr/stream/{dialect}/` | Real-time ASR streaming |
 
-## 🧪 Testing
+## Testing
 
 ### Backend Tests
 
@@ -274,7 +289,7 @@ npm test -- --coverage
 npm run test:e2e
 ```
 
-## 🚀 Deployment
+## Deployment
 
 ### Backend (Production)
 
@@ -313,7 +328,7 @@ npm start
 vercel --prod
 ```
 
-## 🔒 Security
+## Security
 
 - **Authentication**: JWT with refresh tokens
 - **Data Protection**: Encryption at rest and in transit
@@ -323,7 +338,7 @@ vercel --prod
 - **Security Headers**: CSP, HSTS, XSS Protection
 - **Dependencies**: Regular security updates
 
-## 📜 License
+## License
 
 This project is licensed under the [Server Side Public License (SSPL)](https://www.mongodb.com/licensing/server-side-public-license).
 
@@ -334,7 +349,7 @@ This project is licensed under the [Server Side Public License (SSPL)](https://w
 
 For commercial use beyond the scope of SSPL, please contact us at licensing@linguana.app to discuss alternative licensing options.
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -342,17 +357,17 @@ For commercial use beyond the scope of SSPL, please contact us at licensing@ling
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 Documentation
+## Documentation
 
 - [API Documentation](https://docs.linguana.app/api)
 - [Frontend Guide](https://docs.linguana.app/frontend)
 - [Deployment Guide](https://docs.linguana.app/deployment)
 
-## 📧 Contact
+## Contact
 
 For support or questions, please email support@linguana.app
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Whisper ASR by OpenAI
 - Django REST Framework

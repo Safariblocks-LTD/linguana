@@ -1,0 +1,300 @@
+# Linguana Project - Root .gitignore
+# Protect all sensitive files and dependencies
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+*.env
+.env.*
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.npm
+.eslintcache
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv/
+.env/
+.ENV/
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+.nyc_output/
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.parcel-cache/
+
+# next.js build output
+.next/
+out/
+build/
+
+# nuxt.js build output
+.nuxt/
+dist/
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Lock files (keep package-lock.json but ignore others)
+yarn.lock
+pnpm-lock.yaml
+
+# Audio files (development)
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.ogg
+audio/
+recordings/
+
+# Model files (development)
+*.pkl
+*.joblib
+*.h5
+*.hdf5
+*.model
+models/
+model_data/
+
+# Configuration files with secrets
+config.json
+settings.json
+secrets.json
+credentials.json
+aws.json
+firebase.json
+serviceAccountKey.json
+
+# SSL Certificates
+*.pem
+*.key
+*.crt
+*.cert
+ssl/
+certs/
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Kubernetes
+secrets/
+*.kubeconfig
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# AWS
+.aws/
+samconfig.toml
+
+# Google Cloud
+.gcloud/
+
+# Azure
+.azure/
+
+# Local development
+.local/
+cache/
+
+# Testing
+.coverage
+.pytest_cache/
+.tox/
+htmlcov/
+
+# Documentation build
+docs/_build/
+docs/build/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Profiling
+*.prof
+
+# Large files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Generated documentation
+docs/build/
+docs/_build/
+
+# API Keys and Secrets (pattern matching)
+**/api-keys*
+**/secrets*
+**/private*
+**/config*.json
+**/credentials*
+**/*.pem
+**/*.key
+
+# Service accounts
+**/service-account*.json
+**/firebase-admin*.json
+**/google-credentials*.json
+
+# Database backups
+**/*.sql
+**/*.dump
+**/*.backup
+
+# Monitoring and analytics
+**/analytics*
+**/monitoring*
+**/metrics*
+
+# CI/CD local
+.github/workflows/local/
+.gitlab-ci-local/
+bitbucket-pipelines-local.yml
+
+# Local development overrides
+docker-compose.local.yml
+docker-compose.dev.yml
+.env.local.*
+config.local.*

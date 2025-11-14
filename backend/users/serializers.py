@@ -93,7 +93,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'username', 'email', 'first_name', 'last_name', 'role',
-            'wallet_address', 'wallet_verified', 'balance_usdc', 'profile_photo_url',
+            'wallet_address', 'wallet_verified', 'balance_usdc', 'profile_photo',
             'nickname', 'bio', 'total_contributions', 'total_validations',
             'total_earnings_usdc', 'streak_days', 'points', 'level',
             'preferred_language', 'badges', 'initials', 'created_at', 'updated_at'
@@ -119,3 +119,44 @@ class UserStatsSerializer(serializers.ModelSerializer):
             'total_clips_uploaded', 'total_clips_validated', 'total_earned',
             'current_streak', 'points', 'level', 'balance_usdc'
         ]
+
+
+class WalletNonceSerializer(serializers.Serializer):
+    wallet_address = serializers.CharField(max_length=42)
+    
+    def validate_wallet_address(self, value):
+        if not value.startswith('0x') or len(value) != 42:
+            raise serializers.ValidationError('Invalid Ethereum wallet address.')
+        return value.lower()
+
+
+class WalletAuthSerializer(serializers.Serializer):
+    address = serializers.CharField(max_length=42)
+    signature = serializers.CharField()
+    
+    def validate_address(self, value):
+        if not value.startswith('0x') or len(value) != 42:
+            raise serializers.ValidationError('Invalid Ethereum wallet address.')
+        return value.lower()
+
+
+class OnboardingSerializer(serializers.Serializer):
+    nickname = serializers.CharField(max_length=50, required=True)
+    role = serializers.ChoiceField(choices=['contributor', 'validator'], required=True)
+    
+    def validate_nickname(self, value):
+        # Remove @ if user includes it
+        nickname = value.lstrip('@')
+        
+        # Check if nickname is unique
+        if User.objects.filter(nickname=nickname).exists():
+            raise serializers.ValidationError('This nickname is already taken.')
+        
+        # Basic validation
+        if len(nickname) < 3:
+            raise serializers.ValidationError('Nickname must be at least 3 characters long.')
+        
+        if not nickname.replace('_', '').isalnum():
+            raise serializers.ValidationError('Nickname can only contain letters, numbers, and underscores.')
+        
+        return nickname

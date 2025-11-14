@@ -1,15 +1,25 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Mic, CheckCircle2, DollarSign, Activity } from 'lucide-react'
 import { ThemeToggle } from '@/components/ThemeToggle/ThemeToggle'
+import { OptInModal } from '@/components/OptInModal/OptInModal'
+import { OnboardingModal } from '@/components/OnboardingModal/OnboardingModal'
+import { useWalletAuth } from '@/hooks/useWalletAuth'
 
 export default function Home() {
+  const router = useRouter()
+  const { connectWallet, completeOnboarding, loading, error } = useWalletAuth()
   const [apiStatus, setApiStatus] = useState<'checking' | 'online' | 'offline'>('checking')
   const [asrStatus, setAsrStatus] = useState<'checking' | 'online' | 'offline'>('checking')
+  const [optInModalOpen, setOptInModalOpen] = useState(false)
+  const [onboardingModalOpen, setOnboardingModalOpen] = useState(false)
+  const [walletAddress, setWalletAddress] = useState<string | undefined>()
+  const [authError, setAuthError] = useState<string | null>(null)
 
   useEffect(() => {
     // Check backend API
@@ -25,6 +35,45 @@ export default function Home() {
       .catch(() => setAsrStatus('offline'))
   }, [])
 
+  const handleWalletConnect = async (method: 'reown' | 'base' | 'coinbase') => {
+    console.log('[HomePage] handleWalletConnect called with method:', method);
+    try {
+      setAuthError(null)
+      console.log('[HomePage] Calling connectWallet...');
+      const response = await connectWallet(method)
+      console.log('[HomePage] connectWallet response:', response);
+      setWalletAddress(response.user.wallet_address)
+      
+      if (response.needs_onboarding) {
+        console.log('[HomePage] User needs onboarding, opening onboarding modal');
+        setOptInModalOpen(false)
+        setOnboardingModalOpen(true)
+      } else {
+        console.log('[HomePage] User already onboarded, redirecting to dashboard');
+        // Redirect to dashboard based on role
+        const dashboardPath = response.user.role === 'validator' ? '/dashboard/validator' : '/dashboard/contributor'
+        router.push(dashboardPath)
+      }
+    } catch (err: any) {
+      console.error('[HomePage] Error in handleWalletConnect:', err);
+      setAuthError(err.message)
+    }
+  }
+
+  const handleOnboardingComplete = async (data: { nickname: string; role: 'contributor' | 'validator' }) => {
+    try {
+      setAuthError(null)
+      await completeOnboarding(data)
+      
+      // Redirect to dashboard based on role
+      const dashboardPath = data.role === 'validator' ? '/dashboard/validator' : '/dashboard/contributor'
+      router.push(dashboardPath)
+    } catch (err: any) {
+      setAuthError(err.message)
+      throw err
+    }
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black transition-colors">
       {/* Header */}
@@ -39,11 +88,11 @@ export default function Home() {
             </div>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
-              <Button variant="ghost" className="dark:text-gray-300 dark:hover:text-white" asChild>
-                <Link href="/auth/login">Login</Link>
-              </Button>
-              <Button className="bg-gradient-to-r from-primary to-primary-600 hover:from-primary-600 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all" asChild>
-                <Link href="/auth/register">Sign Up</Link>
+              <Button 
+                onClick={() => setOptInModalOpen(true)}
+                className="bg-gradient-to-r from-[#54e6b6] to-[#40c4c4] hover:from-[#40c4c4] hover:to-[#54e6b6] text-black font-semibold shadow-lg hover:shadow-xl transition-all"
+              >
+                Opt In
               </Button>
             </div>
           </div>
@@ -85,10 +134,14 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="bg-gradient-to-r from-primary to-primary-600 hover:from-primary-600 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all px-8 py-6 text-lg" asChild>
-              <Link href="/auth/register">Get Started Free</Link>
+            <Button 
+              size="lg" 
+              onClick={() => setOptInModalOpen(true)}
+              className="bg-gradient-to-r from-[#54e6b6] to-[#40c4c4] hover:from-[#40c4c4] hover:to-[#54e6b6] text-black font-semibold shadow-lg hover:shadow-xl transition-all px-8 py-6 text-lg"
+            >
+              Get Started Free
             </Button>
-            <Button size="lg" variant="outline" className="border-2 border-gray-300 dark:border-gray-700 hover:border-primary dark:hover:border-primary text-gray-900 dark:text-white px-8 py-6 text-lg" asChild>
+            <Button size="lg" variant="outline" className="border-2 border-gray-300 dark:border-gray-700 hover:border-[#54e6b6] dark:hover:border-[#54e6b6] text-gray-900 dark:text-white px-8 py-6 text-lg" asChild>
               <Link href="/dashboard">View Dashboard</Link>
             </Button>
           </div>
@@ -162,6 +215,19 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Modals */}
+      <OptInModal 
+        open={optInModalOpen} 
+        onOpenChange={setOptInModalOpen}
+        onWalletConnect={handleWalletConnect}
+      />
+      <OnboardingModal 
+        open={onboardingModalOpen} 
+        onOpenChange={setOnboardingModalOpen}
+        onComplete={handleOnboardingComplete}
+        walletAddress={walletAddress}
+      />
     </main>
   )
 }

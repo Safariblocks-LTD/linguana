@@ -1,4 +1,7 @@
+import boto3
 from django.conf import settings
+import numpy as np
+import wave
 import logging
 from pydub import AudioSegment
 import io
@@ -7,24 +10,58 @@ logger = logging.getLogger(__name__)
 
 
 def upload_to_s3(file_obj, key):
-    return None
+    if not settings.AWS_STORAGE_BUCKET_NAME:
+        return None
+    
+    try:
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_S3_REGION_NAME
+        )
+        
+        file_obj.seek(0)
+        
+        s3_client.upload_fileobj(
+            file_obj,
+            settings.AWS_STORAGE_BUCKET_NAME,
+            key,
+            ExtraArgs={'ContentType': 'audio/wav'}
+        )
+        
+        url = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/{key}"
+        
+        logger.info(f"File uploaded to S3: {key}")
+        return url
+    
+    except Exception as e:
+        logger.error(f"Failed to upload to S3: {str(e)}")
+        return None
 
 
 def generate_waveform_data(audio_path, num_samples=100):
     try:
         audio = AudioSegment.from_file(audio_path)
         
-        samples = audio.get_array_of_samples()
-        total_samples = len(samples)
+        samples = np.array(audio.get_array_of_samples())
         
-        chunk_size = max(1, total_samples // num_samples)
+        if audio.channels == 2:
+            samples = samples.reshape((-1, 2))
+            samples = samples.mean(axis=1)
+        
+        samples = samples.astype(float)
+        samples = samples / np.max(np.abs(samples))
+        
+        chunk_size = len(samples) // num_samples
+        if chunk_size == 0:
+            chunk_size = 1
         
         waveform = []
-        for i in range(0, total_samples, chunk_size):
+        for i in range(0, len(samples), chunk_size):
             chunk = samples[i:i+chunk_size]
-            if chunk:
-                max_val = max(abs(s) for s in chunk)
-                waveform.append(float(max_val) / 32768.0)
+            if len(chunk) > 0:
+                waveform.append(float(np.max(np.abs(chunk))))
         
         return waveform[:num_samples]
     
@@ -37,15 +74,35 @@ def calculate_audio_metrics(audio_path):
     try:
         audio = AudioSegment.from_file(audio_path)
         
-        rms = audio.rms
+        samples = np.array(audio.get_array_of_samples())
+        
+        if audio.channels == 2:
+            samples = samples.reshape((-1, 2))
+            samples = samples.mean(axis=1)
+        
+        samples = samples.astype(float)
+        
+        signal_power = np.mean(samples ** 2)
+        noise_power = np.var(samples)
+        
+        if noise_power > 0:
+            snr = 10 * np.log10(signal_power / noise_power)
+        else:
+            snr = 30.0
+        
+        rms = np.sqrt(np.mean(samples ** 2))
         clarity = min(1.0, rms / 5000.0)
         
+        zero_crossings = np.sum(np.diff(np.sign(samples)) != 0)
+        zcr = zero_crossings / len(samples)
+        fluency = 1.0 - min(1.0, zcr * 10)
+        
         return {
-            'snr': 20.0,
+            'snr': float(snr),
             'clarity': float(clarity),
-            'fluency': 0.8,
+            'fluency': float(fluency),
             'rms': float(rms),
-            'zero_crossing_rate': 0.1,
+            'zero_crossing_rate': float(zcr),
             'phoneme_data': {}
         }
     

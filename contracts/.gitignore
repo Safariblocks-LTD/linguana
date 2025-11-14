@@ -1,0 +1,232 @@
+# Smart Contracts .gitignore - Hardhat/Foundry/Solidity Specific
+
+# Environment Variables - ALL SHOULD BE IGNORED
+.env
+.env.*
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+config.env
+secrets.env
+
+# Hardhat files
+cache/
+artifacts/
+typechain-types/
+.hardhat_cache/
+
+# Foundry files
+out/
+lib/
+cache/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Logs
+*.log
+logs/
+hardhat.log
+foundry.log
+
+# Coverage
+coverage/
+coverage.json
+lcov.info
+
+# Gas reports
+gas-report.txt
+gas-report.json
+
+# Slither reports
+slither-results.json
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Secrets and Configuration
+secrets.json
+config.json
+private-keys.json
+mnemonic.txt
+wallet.json
+hardhat.config.js.local
+foundry.toml.local
+
+# Private keys and mnemonics
+*.private
+*.key
+*.pem
+keystore/
+wallets/
+accounts/
+
+# Deployment artifacts
+deployments/
+deployments-*/
+deploy.json
+deployments.json
+
+# Test data
+test-data/
+fixtures/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Local development
+.local/
+dev/
+development/
+
+# AWS
+.aws/
+samconfig.toml
+
+# Google Cloud
+.gcloud/
+
+# Monitoring
+monitoring/
+metrics/
+analytics/
+
+# Gas optimization
+gas-optimizer-output/
+gas-reports/
+
+# Security audit reports
+audit-reports/
+security-reports/
+*.md.bak
+
+# ABI files (if generated locally)
+abi/
+*.abi.json
+
+# Bytecode
+*.bin
+*.bytecode
+
+# Compilation artifacts
+build/
+dist/
+
+# Documentation (if generated locally)
+docs/build/
+docs/_build/
+
+# Testing
+coverage/
+.coverage
+.nyc_output/
+
+# Performance profiling
+profile_output/
+benchmark_results/
+
+# Local configuration
+hardhat.config.local.js
+foundry.toml.local
+brownie-config.local.yaml
+
+# Etherscan API keys
+etherscan-keys.txt
+api-keys.txt
+
+# Infura/Alchemy keys
+infura-keys.txt
+alchemy-keys.txt
+
+# Wallet data
+wallet-data/
+keystore.json
+test-wallets.json
+
+# Deployment scripts output
+deployments-output/
+migration-output/
+
+# Local blockchain
+anvil-state/
+ganache-data/
+
+# Frontend integration
+frontend/src/contracts/generated/
+frontend/src/abis/generated/
+
+# Type generation
+typechain/
+types/
+
+# Linter reports
+slither-report.json
+mythril-report.txt
+securify-report.json
+
+# Gas snapshots
+gas-snapshots/
+gas-snapshot.txt
+
+# Benchmark results
+benchmark/
+benchmarks/
+
+# Local test data
+test-data/
+fixtures/
+
+# Scripts output
+scripts/output/
+scripts/temp/
+
+# Cache directories
+.cache/
+.npm/
+.yarn/
+
+# Lock files (keep package-lock.json)
+yarn.lock
+pnpm-lock.yaml
+
+# Package manager
+.pnpm-debug.log*
+
+# Security
+*.private
+*.secret
+*.keyfile
+wallet-private-keys.json
+deployer-keys.json
