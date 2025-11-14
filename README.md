@@ -8,7 +8,7 @@
 
 Linguana is a comprehensive platform for learning and preserving African dialects and languages through an engaging, gamified experience. The platform combines modern web technologies with blockchain to create a community-driven language learning ecosystem that celebrates Africa's rich linguistic diversity.
 
-[![License: SSPL](https://img.shields.io/badge/License-SSPL-ff69b4.svg)](https://www.mongodb.com/licensing/server-side-public-license)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Next.js](https://img.shields.io/badge/Next.js-14.0.3-000000?logo=next.js)](https://nextjs.org/)
 [![Django](https://img.shields.io/badge/Django-4.2-092E20?logo=django)](https://www.djangoproject.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
@@ -340,14 +340,15 @@ vercel --prod
 
 ## License
 
-This project is licensed under the [Server Side Public License (SSPL)](https://www.mongodb.com/licensing/server-side-public-license).
+This project is licensed under the [GNU Affero General Public License v3.0](LICENSE).
 
-### Key Points of SSPL:
-- **Source Available**: The complete source code is available for viewing and modification.
-- **Copyleft**: Any derivative work must be released under the same license.
-- **Service Provider Requirement**: If you offer this software as a service, you must release any modifications and the source code of your service under SSPL.
+### Key Points of AGPL-3.0:
+- **Copyleft**: All derivative works must be distributed under the same license terms
+- **Source Code Availability**: Source code must be made available when the software is distributed
+- **Network Use is Distribution**: Using the software over a network counts as distribution, requiring source code to be made available
+- **Compatible with GPL v3**: Can be combined with GPL v3 code
 
-For commercial use beyond the scope of SSPL, please contact us at licensing@linguana.app to discuss alternative licensing options.
+For commercial licensing options, please contact us at licensing@linguana.app
 
 ## Contributing
 
